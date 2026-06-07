@@ -1,0 +1,16 @@
+version: "3.8"
+services:
+  webtop:
+    image: ghcr.io/linuxserver/webtop:ubuntu-xfce
+    container_name: devise_converter_desktop
+    security_opt:
+      - seccomp:unconfined
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Paris
+    volumes:
+      - .:/app
+    ports:
+      - 5000:3000
+    restart: unless-stopped
