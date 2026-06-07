@@ -4,6 +4,8 @@ services:
   devise-converter:
     image: ghcr.io/linuxserver/webtop:ubuntu-xfce
     container_name: devise_converter_desktop
+    privileged: true # Nécessaire pour DBus et les droits système du bureau
+    shm_size: "1gb" # Recommandé pour éviter les crashs d'interface
     security_opt:
       - seccomp:unconfined
     environment:
@@ -15,10 +17,9 @@ services:
     ports:
       - 5000:3000
     restart: unless-stopped
-    # On installe les dépendances au démarrage du container pour que l'app soit prête
     entrypoint: |
       /bin/bash -c "
       echo 'Installing dependencies...'
-      pip3 install -r /app/requirement.txt || echo 'Warning: Dependency installation failed. Please check requirement.txt'
-      echo 'Application ready. Open terminal in Webtop and run: python3 /app/app/app.py'
-      /init"
+      pip3 install -r /app/requirement.txt || echo 'Warning: Dependency installation failed.'
+      echo 'Application ready.'
+      exec /init"
