@@ -1,17 +1,24 @@
-version: '3.8'
+version: "3.8"
 
 services:
   devise-converter:
-    build: .
-    container_name: devise-converter
+    image: ghcr.io/linuxserver/webtop:ubuntu-xfce
+    container_name: devise_converter_desktop
+    security_opt:
+      - seccomp:unconfined
     environment:
-      - DISPLAY=${DISPLAY}
-      - QT_X11_NO_MITSHM=1
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Paris
     volumes:
-      - /tmp/.X11-unix:/tmp/.X11-unix:rw
-      - /etc/localtime:/etc/localtime:ro
-    devices:
-      - /dev/snd:/dev/snd
-    privileged: true
-    # Uncomment the following line if you want to run in host network mode for better GUI performance
-    # network_mode: host
+      - .:/app
+    ports:
+      - 5000:3000
+    restart: unless-stopped
+    # On installe les dépendances au démarrage du container pour que l'app soit prête
+    entrypoint: |
+      /bin/bash -c "
+      echo 'Installing dependencies...' &&
+      pip3 install -r /app/requirement.txt &&
+      echo 'Application ready. Open terminal in Webtop and run: python3 /app/app/app.py' &&
+      /init"
