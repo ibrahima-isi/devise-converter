@@ -18,7 +18,7 @@ services:
     # On installe les dépendances au démarrage du container pour que l'app soit prête
     entrypoint: |
       /bin/bash -c "
-      echo 'Installing dependencies...' &&
-      pip3 install -r /app/requirement.txt &&
-      echo 'Application ready. Open terminal in Webtop and run: python3 /app/app/app.py' &&
+      echo 'Installing dependencies...'
+      pip3 install -r /app/requirement.txt || echo 'Warning: Dependency installation failed. Please check requirement.txt'
+      echo 'Application ready. Open terminal in Webtop and run: python3 /app/app/app.py'
       /init"
